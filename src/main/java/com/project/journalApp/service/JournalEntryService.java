@@ -23,11 +23,15 @@ public class JournalEntryService {
 
     @Transactional
     public void saveEntry(JournalEntry entry, String userName){
+        try{
         UserEntry userEntry = userEntryService.findByName(userName);
         entry.setDate(new Date());
         JournalEntry savedEntry = journalEntryRepo.save(entry);
         userEntry.getJournalEntryList().add(savedEntry);
         userEntryService.saveEntry(userEntry);
+        }catch (Exception e){
+            throw new RuntimeException("Error occurred during saving.",e);
+        }
     }
 
     public void saveEntrywithID(JournalEntry entry){
